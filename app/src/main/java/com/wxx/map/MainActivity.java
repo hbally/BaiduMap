@@ -1,6 +1,7 @@
 package com.wxx.map;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -144,15 +145,13 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main_custom);
         ButterKnife.bind(this);
         initView();
         initMarker();
         initLocation();
-
-
         if (initDirs()) {
             initNavigatin();
         }
@@ -173,7 +172,13 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
             }
         }
         //初始化导航
-        BaiduNaviManager.getInstance().init(this, mSDCardPath, APP_FOLDER_NAME, new BaiduNaviManager.NaviInitListener() {
+        BaiduNaviManager
+                .getInstance()
+                .init(this,
+                mSDCardPath,
+                APP_FOLDER_NAME,
+                new BaiduNaviManager
+                        .NaviInitListener() {
             @Override
             public void onAuthResult(int status, String msg) {
                 if (0 == status) {
@@ -242,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
         Bundle bundle = new Bundle();
         // 必须设置APPID，否则会静音
-        bundle.putString(BNCommonSettingParam.TTS_APP_ID, "0F5B74755E163F0570459A939D1DF18E");
+        bundle.putString(BNCommonSettingParam.TTS_APP_ID, "9972988");
         Log.d(TAG, "设置APPID");
         BNaviSettingManager.setNaviSdkParam(bundle);
     }
@@ -250,7 +255,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     /**
      * 内部TTS播报状态回调接口
      */
-    private BaiduNaviManager.TTSPlayStateListener ttsPlayStateListener = new BaiduNaviManager.TTSPlayStateListener() {
+    private BaiduNaviManager
+            .TTSPlayStateListener ttsPlayStateListener
+            = new BaiduNaviManager.TTSPlayStateListener() {
 
         @Override
         public void playEnd() {
@@ -293,7 +300,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
 
     //判断是否有Sd卡
     private String getSdcardDir() {
-        if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState()
+                .equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
             return Environment.getExternalStorageDirectory().toString();
         }
         return null;
@@ -304,7 +312,9 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         if (Build.VERSION.SDK_INT >= 23) {
             PackageManager pm = this.getPackageManager();
             for (String auth : authComArr) {
-                if (pm.checkPermission(auth, this.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+                if (pm.checkPermission(auth,
+                        this.getPackageName())
+                        != PackageManager.PERMISSION_GRANTED) {
                     return false;
                 }
             }
@@ -347,7 +357,8 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
             List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
             list.add(sNode);
             list.add(eNode);
-            BaiduNaviManager.getInstance().launchNavigator(this, list, 1, isSimulation, new DemoRoutePlanListener(sNode));
+            BaiduNaviManager.getInstance()
+                    .launchNavigator(this, list, 1, isSimulation, new DemoRoutePlanListener(sNode));
         }
     }
 
@@ -491,7 +502,6 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         options.setScanSpan(1000);
 
         mLocationClient.setLocOption(options);
-
         //模式
         mLocationMode = MyLocationConfiguration.LocationMode.NORMAL;
 
@@ -743,19 +753,19 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
     }
 
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && Build.VERSION.SDK_INT > 19) {
-            getWindow().getDecorView()
-                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus && Build.VERSION.SDK_INT > 19) {
+//            getWindow().getDecorView()
+//                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -780,6 +790,7 @@ public class MainActivity extends AppCompatActivity implements BaiduMap.OnMarker
         mMapView.onPause();
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onResume() {
         super.onStop();
